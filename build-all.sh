@@ -1,47 +1,43 @@
 #!/bin/bash
 
-set -x
+####
+####TODO:
+#### - Add execution parameters to allow for gradle or mvn selection
+#### - Add execution parameters to turn on/off Docker builds
+####
 
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-#$SCRIPTDIR/../microservices-netflix-eureka/build-mvn.sh
-cd $SCRIPTDIR/../eureka/
-./build-mvn.sh
-if [ $? -ne 0 ]; then
-    echo "Eureka failed to compile"
-    exit 1
-fi
-cd $SCRIPTDIR
+#################################################################################
+# Build peer repositories
+#################################################################################
 
-#$SCRIPTDIR/../microservices-netflix-zuul/build-mvn.sh
-cd $SCRIPTDIR/../zuul-proxy/
-./build-mvn.sh
-if [ $? -ne 0 ]; then
-    echo "Zuul failed to compile"
-    exit 1
-fi
-cd $SCRIPTDIR
+#Optional overrides to allow for specific default branches to be used.
+DEFAULT_BRANCH=${1:-master}
 
-cd $SCRIPTDIR/../microservices-refapp-wfd-entree/
-./build-mvn.sh
-if [ $? -ne 0 ]; then
-    echo "Entree failed to compile"
-    exit 1
-fi
-cd $SCRIPTDIR
+#IBM Cloud Architecture GitHub Repository.  This should be changed for forked repositories.
+GITHUB_ORG="ibm-cloud-architecture"
 
-cd $SCRIPTDIR/../microservices-refapp-wfd-appetizer/
-./build-mvn.sh
-if [ $? -ne 0 ]; then
-    echo "Appetizer failed to compile"
-    exit 1
-fi
-cd $SCRIPTDIR
+#All required repositories
+REQUIRED_REPOS=(
+    https://github.com/${GITHUB_ORG}/microservices-netflix-eureka.git
+    https://github.com/${GITHUB_ORG}/microservices-netflix-zuul.git
+    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-appetizer.git
+    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-entree.git
+    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-dessert.git
+    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
+)
 
-cd $SCRIPTDIR/../microservices-refapp-wfd-menu/
-./build-mvn.sh
-if [ $? -ne 0 ]; then
-    echo "Menu failed to compile"
-    exit 1
-fi
-cd $SCRIPTDIR
+#Build all required repositories as a peer of the current directory (root microservices-refapp-netflix repository)
+for REPO in ${REQUIRED_REPOS[@]}; do
+  PROJECT=$(echo ${REPO} | cut -d/ -f5 | cut -d. -f1)
+  echo -e "\nBuilding ${PROJECT} project"
+
+  cd ../${PROJECT}
+  ./build-mvn.sh
+  if [ $? -ne 0 ]; then
+      echo "${PROJECT} failed to compile"
+      exit 1
+  fi
+  cd $SCRIPTDIR
+done
