@@ -34,4 +34,42 @@ Application Components:
 5. [Dessert Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-dessert)  
 
 ## Run the reference applications locally and in IBM Cloud
-*TBD End to End Setup*
+
+### Prerequisites: Environment Setup
+
+- Install Java JDK 1.8 and ensure it is available in your PATH
+- Install Docker on Windows or Mac
+
+- Acquire the code
+  - Clone the base repository:
+    **`git clone https://github.com/ibm-cloud-architecture/microservices-netflix`**
+  - Clone the peer repositories:
+    **`./clonePeers.sh`**
+
+### Run locally via Docker Compose
+
+You can run the entire application locally on your laptop via Docker Compose, a container orchestration tool provided by Docker.
+
+#### Step 1: Build locally
+
+Run the `./build-all.sh` command to build all the necessary Java projects.  This will build all the components required runnable JARs and package them into Docker containers.
+
+#### Step 2: Run Docker Compose
+
+Run the following Docker Compose command to start all the application components locally:
+
+  `docker-compose up` to run with output sent to the console _(for all 7 microservices)_
+  or
+  `docker-compose up -d` to run in detached mode and run the containers in the backround.
+
+#### Step 3: Access the application
+
+You can access the application after a few moments via `http://localhost/menu-service/menu`!  That's easy enough!  The backing services are automatically registered with Eureka and routed to the necessary dependent microservices upon calling the _Menu_ service.
+
+### Run on Bluemix via Cloud Foundry
+
+**TBD End to End Setup**
+
+### Run on Bluemix via IBM Container Service
+
+**TBD End to End Setup**
