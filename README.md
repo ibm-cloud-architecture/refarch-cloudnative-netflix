@@ -27,11 +27,11 @@ Infrastructure Components:
 
 Application Components:  
 
-1. [Menu UI]()  
-2. [Menu Backend](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-menu)  
-3. [Appetizer Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-appetizer)  
-4. [Entree Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-entree)  
-5. [Dessert Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-dessert)  
+1. [Menu UI]()  - User interface for presenting menu options externally  
+2. [Menu Backend](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-menu)  - Exposes all the meal components as a single REST API endpoint, aggregating Appetizers, Entrees, and Desserts.  
+3. [Appetizer Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-appetizer)  - Microservice providing a REST API for Appetizer options
+4. [Entree Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-entree)  - Microservice providing a REST API for Entree options  
+5. [Dessert Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-dessert)  - Microservice providing a REST API for Dessert options  
 
 ## Run the reference applications locally and in IBM Cloud
 
@@ -54,19 +54,19 @@ You can run the entire application locally on your laptop via Docker Compose, a 
 
 Run the following build script to build all the necessary Java projects.  This will build all the components required runnable JARs and package them into Docker containers.
 
-  `./build-all.sh`
+  **`./build-all.sh`**
 
 #### Step 2: Run Docker Compose
 
-Run the following Docker Compose command to start all the application components locally:
+Run one of the following Docker Compose commands to start all the application components locally:
 
-  `docker-compose up` to run with output sent to the console _(for all 7 microservices)_  
-  - or -  
-  `docker-compose up -d` to run in detached mode and run the containers in the backround.  
+  - **`docker-compose up`** to run with output sent to the console _(for all 7 microservices)_  
+  - or  
+  - **`docker-compose up -d`** to run in detached mode and run the containers in the backround.  
 
 #### Step 3: Access the application
 
-You can access the application after a few moments via `http://localhost/menu-service/menu`!  That's easy enough!  
+You can access the application after a few moments via **`http://localhost/menu-service/menu`**!  That's easy enough!  
 
 The backing services are automatically registered with Eureka and routed to the necessary dependent microservices, upon calling the _Menu_ service.
 
