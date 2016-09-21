@@ -1,0 +1,57 @@
+version: '2'
+services:
+  eureka:
+   #build: ../microservices-netflix-eureka/docker
+   image: microservices-refapp-eureka
+   ports:
+    - "8761:8761"
+
+  zuul:
+   #build: ../microservices-netflix-zuul/docker
+   image: microservices-refapp-zuul
+   links:
+    - eureka
+   ports:
+    - "80:8080"
+   env_file:
+    - wfd.env
+
+  menu:
+   #build: ../microservices-refapp-wfd-menu/docker
+   image: wfd-menu
+   links:
+    - eureka
+   ports:
+    - "8180:8180"
+   env_file:
+    - wfd.env
+
+  appetizer:
+   #build: ../microservices-refapp-wfd-appetizer/docker
+   image: wfd-appetizer
+   ports:
+    - "8082:8082"
+   links:
+    - eureka
+   env_file:
+    - wfd.env
+
+  entree:
+   #build: ../microservices-refapp-wfd-entree/docker
+   image: wfd-entree
+   links:
+    - eureka
+   ports:
+    - "8081:8081"
+   env_file:
+    - wfd.env
+
+  dessert:
+   #build: ../microservices-refapp-wfd-dessert/docker
+   image: wfd-dessert
+   links:
+    - eureka
+   ports:
+    - "8083:8083"
+   env_file:
+    - wfd.env

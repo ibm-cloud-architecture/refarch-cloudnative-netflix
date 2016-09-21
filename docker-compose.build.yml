@@ -1,0 +1,19 @@
+version: '2'
+services:
+  eureka:
+   build: ../microservices-netflix-eureka/docker
+
+  zuul:
+   build: ../microservices-netflix-zuul/docker
+
+  menu:
+   build: ../microservices-refapp-wfd-menu/docker
+
+  appetizer:
+   build: ../microservices-refapp-wfd-appetizer/docker
+
+  entree:
+   build: ../microservices-refapp-wfd-entree/docker
+
+  dessert:
+   build: ../microservices-refapp-wfd-dessert/docker
