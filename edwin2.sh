@@ -46,9 +46,13 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     # Gradle build, then use it
     ./gradlew build
     RUNNABLE_JAR="$(find build/libs -name "*.jar")"
+    #mvn clean package
+    #RUNNABLE_JAR="$(find target -name "*.jar")"
   fi
 
-  APP_NAME=$(basename ${RUNNABLE_JAR})
+  FILE_NAME=$(basename ${RUNNABLE_JAR})
+  # Cut last 4 characters (.jar) from FILE_NAME
+  APP_NAME=${FILE_NAME::-4}
 
   MEM="256M"
   if [[ ${APP_NAME} == *"eureka"* ]]; then
@@ -60,7 +64,9 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   if [ ${RUN_RESULT} -ne 0 ]; then
       echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
-      exit 1
+#      exit 1
   fi
   cd $SCRIPTDIR
 done
+
+cf apps
