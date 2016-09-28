@@ -2,8 +2,6 @@
 
 ####
 ####TODO:
-#### - Add execution parameters to allow for gradle or mvn selection
-#### - Add execution parameters to turn on/off Docker builds
 #### - Add execution parameters to allow for _clean_ option
 
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
@@ -34,10 +32,10 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   echo -e "\nBuilding ${PROJECT} project"
 
   cd ../${PROJECT}
-  ./build-gradle.sh
+  ./build-microservice.sh $*
   if [ $? -ne 0 ]; then
       echo "${PROJECT} failed to compile"
       exit 1
   fi
-  cd $SCRIPTDIR
+  cd ${SCRIPTDIR}
 done
