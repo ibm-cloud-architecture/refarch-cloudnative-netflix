@@ -74,7 +74,8 @@ The backing services are automatically registered with Eureka and routed to the 
 
 Run the following script to deploy all the necessary Java projects as Cloud
 Foundry apps.
-**`./deploy-to-cf.sh`**
+
+  **`./deploy-to-cf.sh`**
 
 ### Run on Bluemix via IBM Container Service
 
