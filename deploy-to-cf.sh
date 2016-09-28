@@ -7,16 +7,22 @@
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 #################################################################################
-# Build peer repositories
+# Configuration Data
 #################################################################################
 
-#Optional overrides to allow for specific default branches to be used.
-DEFAULT_BRANCH=${1:-master}
+#This can be updated to use any string which will guarantee global uniqueness across your region (username, favorite cat, etc.)
+SERVICE_SUFFIX=${RANDOM}
+
+#The name of the user-provided-service we will create to connect to Service Discovery servers
+SERVICE_DISCOVERY_UPS="eureka-service-discovery"
+
+# The domain associated with your Bluemix region
+DOMAIN="mybluemix.net"
+#DOMAIN="eu-gb.mybluemix.net"
+#DOMAIN="au-syd.mybluemix.net"
 
 #IBM Cloud Architecture GitHub Repository.  This should be changed for forked repositories.
 GITHUB_ORG="ibm-cloud-architecture"
-
-EUREKA_NAME="eureka-edwin"
 
 #All required repositories
 REQUIRED_REPOS=(
@@ -25,8 +31,12 @@ REQUIRED_REPOS=(
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-appetizer.git
     #https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-entree.git
     #https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-dessert.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
+    #https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
 )
+
+#################################################################################
+# Deployment Code
+#################################################################################
 
 #Build all required repositories as a peer of the current directory (root microservices-refapp-netflix repository)
 for REPO in ${REQUIRED_REPOS[@]}; do
@@ -34,88 +44,57 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   PROJECT=$(echo ${REPO} | cut -d/ -f5 | cut -d. -f1)
   echo -e "\nStarting ${PROJECT} project"
 
-  if [[ ! -d ${PROJECT} ]]; then
-    git clone ${REPO}
-  fi
-  cd ${PROJECT}
-  ### May not be the best way to determine this.
-  if [[ ${PROJECT} == *"eureka"* ]]; then
-    APP_YAML="application-eureka.yml"
-  #elif [[ ${PROJECT} == *"zuul"* ]]; then
-  #  APP_YAML="application-zuul-proxy.yml"
-  else
-    APP_YAML="application-client.yml"
-  fi
-  #if [[ -d build/libs ]]; then
-    # If gradle-built JAR exists, use it
-  #  RUNNABLE_JAR="$(find build/libs -name "*.jar")"
-  #elif [[ -d target ]]; then
-    # If mvn-built JAR exists, use it
-  #  RUNNABLE_JAR="$(find target -name "*.jar")"
-  #else
-    # Gradle build, then use it
-    mv src/main/resources/application.yml src/main/resources/application.yml.bak
-    cp ../${APP_YAML} src/main/resources/application.yml
-    #?? Save existing JAR file
-    #??OLD_JAR="$(find build/libs -name "*.jar")"
-    #??mv build/libs/${OLD_JAR} build/libs/${OLD_JAR}.bak
-    ./gradlew build
-    RUNNABLE_JAR="$(find build/libs -name "*.jar")"
-    #mvn clean package
-    #RUNNABLE_JAR="$(find target -name "*.jar")"
-    mv src/main/resources/application.yml src/main/resources/application.yml.cf
-    mv src/main/resources/application.yml.bak src/main/resources/application.yml
-  #fi
+  cd ../${PROJECT}
 
-  FILE_NAME=$(basename ${RUNNABLE_JAR})
-  # Cut last 4 characters (.jar) from FILE_NAME
-  APP_NAME=${FILE_NAME::-4}
+  # Determein which JAR file we should use (since we have both Gradle and Maven possibilities)
+  RUNNABLE_JAR="$(find . -name "*-SNAPSHOT.jar" | sed -n 1p)"
 
-  if [[ ${APP_NAME} == *"eureka"* ]]; then
-    MEM="512M"
-  else
-    MEM="256M"
-  fi
-  if [[ ${PROJECT} == *"eureka"* ]]; then
-    APP_NAME=${EUREKA_NAME}
-  elif [[ ${PROJECT} == *"zuul"* ]]; then
-      APP_NAME="zuul-proxy"
-  elif [[ ${PROJECT} == *"menu"* ]]; then
-    APP_NAME="menu-service"
-  elif [[ ${PROJECT} == *"appetizer"* ]]; then
-    APP_NAME="appetizer-service"
-  elif [[ ${PROJECT} == *"entree"* ]]; then
-    APP_NAME="entree-service"
-  elif [[ ${PROJECT} == *"dessert"* ]]; then
-    APP_NAME="dessert-service"
-  fi
+  # Create the route ahead of time to control access
+  CURRENT_SPACE=$(cf target | grep "Space:" | awk '{print $2}')
+  SERVICE_ROUTE="${PROJECT}-${SERVICE_SUFFIX}"
 
+  cf create-route ${CURRENT_SPACE} ${DOMAIN} --hostname ${SERVICE_ROUTE}
+
+  # Push application code
   if [[ ${PROJECT} == *"eureka"* ]]; then
-    cf push ${APP_NAME} -p ${RUNNABLE_JAR} -m ${MEM}
+    # Push Eureka application code, leveraging metadata from manifest.yml
+    cf push \
+      -p ${RUNNABLE_JAR} \
+      -d ${DOMAIN} \
+      -n ${SERVICE_ROUTE}
     RUN_RESULT=$?
-    ### TODO
-    ### Need to do this in a clean way. Service may already exist.
-    ###
-    #cf cups ${APP_NAME} -p '{"uri": "http://eureka-001-snapshot.mybluemix.net/eureka"}'
-    cf cups ${APP_NAME} -p '{"uri": "http://eureka-edwin.mybluemix.net/eureka"}'
+
+    # Create a user-provided-service instance of Eureka for easier binding
+    CHECK_SERVICE=$(cf service ${SERVICE_DISCOVERY_UPS})
+    if [[ "$?" == "0" ]]; then
+      cf delete-service -f ${SERVICE_DISCOVERY_UPS}
+    fi
+    cf create-user-provided-service ${SERVICE_DISCOVERY_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/eureka/\"}"
+
   else
-    cf push ${APP_NAME} -p ${RUNNABLE_JAR} -m ${MEM} --no-start
-    cf set-env "${APP_NAME}" SPRING_PROFILES_ACTIVE cloud
-    ### TODO
-    ### May already be bound:
-    ###
-    #cf bind-service "${APP_NAME}" eureka-0.0.1-SNAPSHOT
-    cf bind-service "${APP_NAME}" ${EUREKA_NAME}
-    #cf restage ${APP_NAME}
-    cf start "${APP_NAME}"
+    # Push microservice component code, leveraging metadata from manifest.yml
+    cf push \
+      -p ${RUNNABLE_JAR} \
+      -d ${DOMAIN} \
+      -n ${SERVICE_ROUTE} \
+      --no-start
+
+    cf set-env ${PROJECT} SPRING_PROFILES_ACTIVE cloud
+
+    cf bind-service ${PROJECT} ${SERVICE_DISCOVERY_UPS}
+    cf restage ${PROJECT}
+    cf start ${PROJECT}
     RUN_RESULT=$?
   fi
 
   if [ ${RUN_RESULT} -ne 0 ]; then
-      echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
-#      exit 1
+    echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
+    exit 1
   fi
   cd $SCRIPTDIR
 done
 
 cf apps
+#TODO Do some more inspection here to output messages for where users can find:
+# - Their Eureka Dashboard
+# - Their Menu UI endpoint, via Zuul-Proxy
