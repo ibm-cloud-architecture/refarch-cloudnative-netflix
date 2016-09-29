@@ -18,7 +18,7 @@ services:
 
   ui:
    #build: ../microservices-refapp-wfd-ui/docker
-   image: wfd-menu-ui
+   image: wfd-ui
    links:
     - eureka
    ports:
