@@ -16,6 +16,16 @@ services:
    env_file:
     - wfd.env
 
+  ui:
+   #build: ../microservices-refapp-wfd-ui/docker
+   image: wfd-menu-ui
+   links:
+    - eureka
+   ports:
+    - "8181:8181"
+   env_file:
+    - wfd.env
+
   menu:
    #build: ../microservices-refapp-wfd-menu/docker
    image: wfd-menu

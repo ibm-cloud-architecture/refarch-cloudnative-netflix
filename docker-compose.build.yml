@@ -6,6 +6,9 @@ services:
   zuul:
    build: ../microservices-netflix-zuul/docker
 
+  ui:
+   build: ../microservices-refapp-wfd-ui/docker
+
   menu:
    build: ../microservices-refapp-wfd-menu/docker
 
