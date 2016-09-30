@@ -2,13 +2,13 @@
 
 Reference applications for deploying microservice-based applications onto IBM Bluemix, leveraging the Netflix OSS framework.
 
-## Introduction
+## Architecture
 
-TBD
+  ![Application Architecture](static/imgs/wfd-arch-v1.png?raw=true)
 
-## Overview
+## Application Overview
 
-The application is a simple dinner menu that displays available appetizers, entrees, and desserts for a non-existent restaraunt.  There are several components of this architecture:
+The application is a simple dinner menu that displays available appetizers, entrees, and desserts for a non-existent restaurant.  There are several components of this architecture:
 
 - Menu UI & Backend services aggregate all the options and display them to the user
 - Individual microservices for menu options among Appetizers, Entrees, and Desserts
@@ -61,7 +61,7 @@ Run the following build script to build all the necessary Java projects.  This w
 Run one of the following Docker Compose commands to start all the application components locally:
 
   - **`docker-compose up`** to run with output sent to the console _(for all 7 microservices)_  
-  - or  
+    or  
   - **`docker-compose up -d`** to run in detached mode and run the containers in the backround.  
 
 #### Step 3: Access the application
