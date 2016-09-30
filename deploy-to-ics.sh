@@ -65,9 +65,11 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   cf create-route ${CURRENT_SPACE} ${DOMAIN} --hostname ${SERVICE_ROUTE}
 
+  echo -e "\nTagging and pushing ${IMAGE_NAME}"
   docker tag ${IMAGE_NAME}:latest ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}:latest
   docker push ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}:latest
 
+  echo -e "\nCreating ${IMAGE_NAME} container group"
   # Push application code
   if [[ ${PROJECT} == *"eureka"* ]]; then
     # Push Eureka application code
@@ -78,7 +80,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --hostname ${SERVICE_ROUTE} \
       --domain ${DOMAIN} \
       --env "SPRING_PROFILES_ACTIVE=cloud" \
-      ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${CONTROLLER_IMAGE}
+      ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
     RUN_RESULT=$?
 
     EUREKA_ENDPOINT="http://${SERVICE_ROUTE}.${DOMAIN}/eureka/"
@@ -92,7 +94,6 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   else
     # Push microservice component code, leveraging metadata from manifest.yml
-    echo "else"
     cf ic group create \
       --name ${IMAGE_NAME}-group \
       --publish 8080 --memory 128 --auto \
@@ -102,7 +103,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --env "SPRING_PROFILES_ACTIVE=cloud" \
       --env "server_port=8080" \
       --env "eureka_client_serviceUrl_defaultZone=${EUREKA_ENDPOINT}" \
-      ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${CONTROLLER_IMAGE}
+      ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
     RUN_RESULT=$?
   fi
 
