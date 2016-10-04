@@ -2,17 +2,27 @@ version: '2'
 services:
   eureka:
    #build: ../microservices-netflix-eureka/docker
-   image: microservices-refapp-eureka
+   image: microservices-netflix-eureka
    ports:
     - "8761:8761"
 
   zuul:
    #build: ../microservices-netflix-zuul/docker
-   image: microservices-refapp-zuul
+   image: microservices-netflix-zuul
    links:
     - eureka
    ports:
     - "80:8080"
+   env_file:
+    - wfd.env
+
+  ui:
+   #build: ../microservices-refapp-wfd-ui/docker
+   image: wfd-ui
+   links:
+    - eureka
+   ports:
+    - "8181:8181"
    env_file:
     - wfd.env
 

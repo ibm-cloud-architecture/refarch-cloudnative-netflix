@@ -2,13 +2,13 @@
 
 Reference applications for deploying microservice-based applications onto IBM Bluemix, leveraging the Netflix OSS framework.
 
-## Introduction
+## Architecture
 
-TBD
+  ![Application Architecture](static/imgs/wfd-arch-v1.png?raw=true)
 
-## Overview
+## Application Overview
 
-The application is a simple dinner menu that displays available appetizers, entrees, and desserts for a non-existent restaraunt.  There are several components of this architecture:
+The application is a simple dinner menu that displays available appetizers, entrees, and desserts for a non-existent restaurant.  There are several components of this architecture:
 
 - Menu UI & Backend services aggregate all the options and display them to the user
 - Individual microservices for menu options among Appetizers, Entrees, and Desserts
@@ -27,7 +27,7 @@ Infrastructure Components:
 
 Application Components:  
 
-1. [Menu UI]()  - User interface for presenting menu options externally  
+1. [Menu UI](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-ui)  - User interface for presenting menu options externally  
 2. [Menu Backend](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-menu)  - Exposes all the meal components as a single REST API endpoint, aggregating Appetizers, Entrees, and Desserts.  
 3. [Appetizer Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-appetizer)  - Microservice providing a REST API for Appetizer options
 4. [Entree Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-entree)  - Microservice providing a REST API for Entree options  
@@ -61,12 +61,12 @@ Run the following build script to build all the necessary Java projects.  This w
 Run one of the following Docker Compose commands to start all the application components locally:
 
   - **`docker-compose up`** to run with output sent to the console _(for all 7 microservices)_  
-  - or  
+    or  
   - **`docker-compose up -d`** to run in detached mode and run the containers in the backround.  
 
 #### Step 3: Access the application
 
-You can access the application after a few moments via **`http://localhost/menu-service/menu`**!  That's easy enough!  
+You can access the application after a few moments via **`http://localhost/whats-for-dinner`**!  That's easy enough!  
 
 The backing services are automatically registered with Eureka and routed to the necessary dependent microservices, upon calling the _Menu_ service.
 
