@@ -32,6 +32,7 @@ REQUIRED_REPOS=(
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-entree.git
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-dessert.git
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
+    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-ui.git
 )
 
 #################################################################################
