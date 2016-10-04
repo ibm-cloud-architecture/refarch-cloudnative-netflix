@@ -66,7 +66,7 @@ Run one of the following Docker Compose commands to start all the application co
 
 #### Step 3: Access the application
 
-You can access the application after a few moments via **`http://localhost/menu-service/menu`**!  That's easy enough!  
+You can access the application after a few moments via **`http://localhost/whats-for-dinner`**!  That's easy enough!  
 
 The backing services are automatically registered with Eureka and routed to the necessary dependent microservices, upon calling the _Menu_ service.
 
