@@ -12,8 +12,7 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 #################################################################################
 
 #This can be updated to use any string which will guarantee global uniqueness across your region (username, favorite cat, etc.)
-#SERVICE_SUFFIX=${RANDOM}
-SERVICE_SUFFIX="cacaw"
+SERVICE_SUFFIX=${RANDOM}
 
 #The name of the user-provided-service we will create to connect to Service Discovery servers
 SERVICE_DISCOVERY_UPS="eureka-service-discovery"
