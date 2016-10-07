@@ -25,6 +25,7 @@ REQUIRED_REPOS=(
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-entree.git
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-dessert.git
     https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
+    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-ui.git
 )
 
 #Clone all required repositories as a peer of the current directory (root microservices-refapp-netflix repository)
