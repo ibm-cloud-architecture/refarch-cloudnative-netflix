@@ -79,7 +79,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --min 1 --max 2 --desired 1 \
       --hostname ${SERVICE_ROUTE} \
       --domain ${DOMAIN} \
-      --env "SPRING_PROFILES_ACTIVE=cloud" \
+      --env "SPRING_PROFILES_ACTIVE=container-cloud" \
       ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
     RUN_RESULT=$?
 
@@ -100,10 +100,10 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --min 1 --max 2 --desired 1 \
       --hostname ${SERVICE_ROUTE} \
       --domain ${DOMAIN} \
-      --env "SPRING_PROFILES_ACTIVE=cloud" \
       --env "server_port=8080" \
       --env "eureka_client_serviceUrl_defaultZone=${EUREKA_ENDPOINT}" \
       ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
+
     RUN_RESULT=$?
   fi
 
