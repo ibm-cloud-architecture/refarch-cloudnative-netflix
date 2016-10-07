@@ -60,7 +60,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   # Create the route ahead of time to control access
   CURRENT_SPACE=$(cf target | grep "Space:" | awk '{print $2}')
-  SERVICE_ROUTE="${PROJECT}-${SERVICE_SUFFIX}"
+  SERVICE_ROUTE="${IMAGE_NAME}-${SERVICE_SUFFIX}"
 
   cf create-route ${CURRENT_SPACE} ${DOMAIN} --hostname ${SERVICE_ROUTE}
 
