@@ -51,13 +51,14 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   RUNNABLE_JAR="$(find . -name "*-SNAPSHOT.jar" | sed -n 1p)"
 
   # Create the route ahead of time to control access
+  COMPONENT=${PROJECT#refarch-cloudnative-}
   CURRENT_SPACE=$(cf target | grep "Space:" | awk '{print $2}')
-  SERVICE_ROUTE="${PROJECT}-${SERVICE_SUFFIX}"
+  SERVICE_ROUTE="${COMPONENT}-${SERVICE_SUFFIX}"
 
   cf create-route ${CURRENT_SPACE} ${DOMAIN} --hostname ${SERVICE_ROUTE}
 
   # Push application code
-  if [[ ${PROJECT} == *"eureka"* ]]; then
+  if [[ ${COMPONENT} == *"netflix-eureka"* ]]; then
     # Push Eureka application code, leveraging metadata from manifest.yml
     cf push \
       -p ${RUNNABLE_JAR} \
@@ -80,11 +81,11 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       -n ${SERVICE_ROUTE} \
       --no-start
 
-    cf set-env ${PROJECT} SPRING_PROFILES_ACTIVE cloud
+    cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
 
-    cf bind-service ${PROJECT} ${SERVICE_DISCOVERY_UPS}
-    cf restage ${PROJECT}
-    cf start ${PROJECT}
+    cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
+    cf restage ${COMPONENT}
+    cf start ${COMPONENT}
     RUN_RESULT=$?
   fi
 
