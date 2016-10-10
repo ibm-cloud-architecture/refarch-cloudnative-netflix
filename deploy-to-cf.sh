@@ -26,13 +26,13 @@ GITHUB_ORG="ibm-cloud-architecture"
 
 #All required repositories
 REQUIRED_REPOS=(
-    https://github.com/${GITHUB_ORG}/microservices-netflix-eureka.git
-    https://github.com/${GITHUB_ORG}/microservices-netflix-zuul.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-appetizer.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-entree.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-dessert.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-ui.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-entree.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-dessert.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-menu.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-ui.git
 )
 
 #################################################################################

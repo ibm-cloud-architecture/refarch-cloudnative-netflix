@@ -34,13 +34,13 @@ GITHUB_ORG="ibm-cloud-architecture"
 
 #All required repositories
 REQUIRED_REPOS=(
-    https://github.com/${GITHUB_ORG}/microservices-netflix-eureka.git
-    https://github.com/${GITHUB_ORG}/microservices-netflix-zuul.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-appetizer.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-entree.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-dessert.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-menu.git
-    https://github.com/${GITHUB_ORG}/microservices-refapp-wfd-ui.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-entree.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-dessert.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-menu.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-ui.git
 )
 
 #################################################################################
@@ -56,7 +56,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   cd ../${PROJECT}
 
   #Remove the 'microservices-refapp-' prefix from the image names
-  IMAGE_NAME=${PROJECT#microservices-refapp-}
+  IMAGE_NAME=${PROJECT#refarch-cloudnative-}
 
   # Create the route ahead of time to control access
   CURRENT_SPACE=$(cf target | grep "Space:" | awk '{print $2}')

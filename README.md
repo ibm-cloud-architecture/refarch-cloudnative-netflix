@@ -22,16 +22,16 @@ This project runs itself like a microservice project, as such each component in 
 
 Infrastructure Components:  
 
-1. [Eureka](https://github.com/ibm-cloud-architecture/microservices-netflix-eureka)  - Contains the Eureka application components for microservices foundation  
-2. [Zuul](https://github.com/ibm-cloud-architecture/microservices-netflix-zuul)  - Contains the Zuul application components for microservices foundation  
+1. [Eureka](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-eureka)  - Contains the Eureka application components for microservices foundation  
+2. [Zuul](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-zuul)  - Contains the Zuul application components for microservices foundation  
 
 Application Components:  
 
-1. [Menu UI](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-ui)  - User interface for presenting menu options externally  
-2. [Menu Backend](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-menu)  - Exposes all the meal components as a single REST API endpoint, aggregating Appetizers, Entrees, and Desserts.  
-3. [Appetizer Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-appetizer)  - Microservice providing a REST API for Appetizer options
-4. [Entree Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-entree)  - Microservice providing a REST API for Entree options  
-5. [Dessert Service](https://github.com/ibm-cloud-architecture/microservices-refapp-wfd-dessert)  - Microservice providing a REST API for Dessert options  
+1. [Menu UI](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-ui)  - User interface for presenting menu options externally  
+2. [Menu Backend](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-menu)  - Exposes all the meal components as a single REST API endpoint, aggregating Appetizers, Entrees, and Desserts.  
+3. [Appetizer Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-appetizer)  - Microservice providing a REST API for Appetizer options
+4. [Entree Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-entree)  - Microservice providing a REST API for Entree options  
+5. [Dessert Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-dessert)  - Microservice providing a REST API for Dessert options  
 
 ## Run the reference applications locally and in IBM Cloud
 
@@ -42,7 +42,7 @@ Application Components:
 
 - Acquire the code
   - Clone the base repository:
-    **`git clone https://github.com/ibm-cloud-architecture/microservices-netflix`**
+    **`git clone https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix`**
   - Clone the peer repositories:
     **`./clonePeers.sh`**
 
