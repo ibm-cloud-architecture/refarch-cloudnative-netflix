@@ -7,10 +7,10 @@ services:
    build: ../refarch-cloudnative-netflix-zuul/docker
 
   ui:
-   build: ../refarch-cloudnative-refapp-wfd-ui/docker
+   build: ../refarch-cloudnative-wfd-ui/docker
 
   menu:
-   build: ../refarch-cloudnative-refapp-wfd-menu/docker
+   build: ../refarch-cloudnative-wfd-menu/docker
 
   appetizer:
    build: ../refarch-cloudnative-wfd-appetizer/docker
