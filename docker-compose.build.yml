@@ -1,22 +1,22 @@
 version: '2'
 services:
   eureka:
-   build: ../microservices-netflix-eureka/docker
+   build: ../refarch-cloudnative-netflix-eureka/docker
 
   zuul:
-   build: ../microservices-netflix-zuul/docker
+   build: ../refarch-cloudnative-netflix-zuul/docker
 
   ui:
-   build: ../microservices-refapp-wfd-ui/docker
+   build: ../refarch-cloudnative-refapp-wfd-ui/docker
 
   menu:
-   build: ../microservices-refapp-wfd-menu/docker
+   build: ../refarch-cloudnative-refapp-wfd-menu/docker
 
   appetizer:
-   build: ../microservices-refapp-wfd-appetizer/docker
+   build: ../refarch-cloudnative-wfd-appetizer/docker
 
   entree:
-   build: ../microservices-refapp-wfd-entree/docker
+   build: ../refarch-cloudnative-wfd-entree/docker
 
   dessert:
-   build: ../microservices-refapp-wfd-dessert/docker
+   build: ../refarch-cloudnative-wfd-dessert/docker

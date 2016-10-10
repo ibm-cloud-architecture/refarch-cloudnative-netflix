@@ -1,14 +1,14 @@
 version: '2'
 services:
   eureka:
-   #build: ../microservices-netflix-eureka/docker
-   image: microservices-netflix-eureka
+   #build: ../refarch-cloudnative-netflix-eureka/docker
+   image: netflix-eureka
    ports:
     - "8761:8761"
 
   zuul:
-   #build: ../microservices-netflix-zuul/docker
-   image: microservices-netflix-zuul
+   #build: ../refarch-cloudnative-netflix-zuul/docker
+   image: netflix-zuul
    links:
     - eureka
    ports:
@@ -17,7 +17,7 @@ services:
     - wfd.env
 
   ui:
-   #build: ../microservices-refapp-wfd-ui/docker
+   #build: ../refarch-cloudnative-wfd-ui/docker
    image: wfd-ui
    links:
     - eureka
@@ -27,7 +27,7 @@ services:
     - wfd.env
 
   menu:
-   #build: ../microservices-refapp-wfd-menu/docker
+   #build: ../refarch-cloudnative-wfd-menu/docker
    image: wfd-menu
    links:
     - eureka
@@ -37,7 +37,7 @@ services:
     - wfd.env
 
   appetizer:
-   #build: ../microservices-refapp-wfd-appetizer/docker
+   #build: ../refarch-cloudnative-wfd-appetizer/docker
    image: wfd-appetizer
    ports:
     - "8082:8082"
@@ -47,7 +47,7 @@ services:
     - wfd.env
 
   entree:
-   #build: ../microservices-refapp-wfd-entree/docker
+   #build: ../refarch-cloudnative-wfd-entree/docker
    image: wfd-entree
    links:
     - eureka
@@ -57,7 +57,7 @@ services:
     - wfd.env
 
   dessert:
-   #build: ../microservices-refapp-wfd-dessert/docker
+   #build: ../refarch-cloudnative-wfd-dessert/docker
    image: wfd-dessert
    links:
     - eureka
