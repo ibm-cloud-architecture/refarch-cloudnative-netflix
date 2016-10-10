@@ -84,7 +84,6 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
 
     cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
-    cf restage ${COMPONENT}
     cf start ${COMPONENT}
     RUN_RESULT=$?
   fi
