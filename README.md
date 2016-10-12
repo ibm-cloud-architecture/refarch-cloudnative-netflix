@@ -57,9 +57,9 @@ You can run the entire application locally on your laptop via Docker Compose, a 
 
 Run one of the following build script to build all the necessary Java projects.  
 
--   **`./build-all.sh`[-d] ** will build all the components required runnable JARs using [Gradle](https://gradle.org/) and optionally package them into Docker containers.
+-   **`./build-all.sh[-d]`** will build all the components required runnable JARs using [Gradle](https://gradle.org/) and optionally package them into Docker containers.
 
--   **`./build-all.sh`-m [-d]** will build all the components required runnable JARs using [Apache Maven](https://maven.apache.org/) and optionally package them into Docker containers.
+-   **`./build-all.sh-m [-d]`** will build all the components required runnable JARs using [Apache Maven](https://maven.apache.org/) and optionally package them into Docker containers.
 
 #### Step 2: Run Docker Compose
 
