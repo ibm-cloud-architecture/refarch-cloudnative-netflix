@@ -14,8 +14,10 @@ The application is a simple dinner menu that displays available appetizers, entr
 - Individual microservices for menu options among Appetizers, Entrees, and Desserts
 - Menu microservices communicate to each other using the [Netflix OSS Framework](https://netflix.github.io/):
     - [Zuul](https://github.com/Netflix/zuul) provides a proxy layer for the microservices.  
-    - [Eureka](https://github.com/Netflix/eureka) provides a service registry.  The reusable Java Microservices register themselves to Eureka which allows clients to find them.
-
+    - [Eureka](https://github.com/Netflix/eureka) provides a service registry.  The reusable Java microservices register themselves to Eureka which allows clients to find them.
+- Menu microservices can be dynamically configured using the [Spring Framework](https://spring.io/):
+    - [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/) provides server and client-side support for externalized configuration in a distributed system.
+	
 ## Project Component Repositories
 
 This project runs itself like a microservice project, as such each component in the architecture has its own Git Repository and tutorial listed below.  
@@ -24,6 +26,7 @@ Infrastructure Components:
 
 1. [Eureka](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-eureka)  - Contains the Eureka application components for microservices foundation  
 2. [Zuul](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-zuul)  - Contains the Zuul application components for microservices foundation  
+3. [Config](https://github.com/ibm-cloud-architecture/refarch-cloudnative-spring-config) - Contains the Config application components
 
 Application Components:  
 
@@ -44,7 +47,7 @@ Application Components:
   - Clone the base repository:
     **`git clone https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix`**
   - Clone the peer repositories:
-    **`./clonePeers.sh`**
+    **`./clone_peers.sh`**
 
 ### Run locally via Docker Compose
 
@@ -52,9 +55,11 @@ You can run the entire application locally on your laptop via Docker Compose, a 
 
 #### Step 1: Build locally
 
-Run the following build script to build all the necessary Java projects.  This will build all the components required runnable JARs and package them into Docker containers.
+Run one of the following build script to build all the necessary Java projects.  
 
-  **`./build-all.sh`**
+-   **`./build-all.sh`[-d] ** will build all the components required runnable JARs using [Gradle](https://gradle.org/) and optionally package them into Docker containers.
+
+-   **`./build-all.sh`-m [-d]** will build all the components required runnable JARs using [Apache Maven](https://maven.apache.org/) and optionally package them into Docker containers.
 
 #### Step 2: Run Docker Compose
 
@@ -62,7 +67,7 @@ Run one of the following Docker Compose commands to start all the application co
 
   - **`docker-compose up`** to run with output sent to the console _(for all 7 microservices)_  
     or  
-  - **`docker-compose up -d`** to run in detached mode and run the containers in the backround.  
+  - **`docker-compose up -d`** to run in detached mode and run the containers in the background.  
 
 #### Step 3: Access the application
 
@@ -79,3 +84,4 @@ Run the following script to deploy all the necessary Java projects as Cloud Foun
 ### Run on Bluemix via IBM Container Service
 
 **TBD End to End Setup**
+
