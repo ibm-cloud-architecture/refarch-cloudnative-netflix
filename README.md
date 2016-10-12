@@ -17,7 +17,7 @@ The application is a simple dinner menu that displays available appetizers, entr
     - [Eureka](https://github.com/Netflix/eureka) provides a service registry.  The reusable Java microservices register themselves to Eureka which allows clients to find them.
 - Menu microservices can be dynamically configured using the [Spring Framework](https://spring.io/):
     - [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/) provides server and client-side support for externalized configuration in a distributed system.
-	
+
 ## Project Component Repositories
 
 This project runs itself like a microservice project, as such each component in the architecture has its own Git Repository and tutorial listed below.  
@@ -36,6 +36,14 @@ Application Components:
 4. [Entree Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-entree)  - Microservice providing a REST API for Entree options  
 5. [Dessert Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-dessert)  - Microservice providing a REST API for Dessert options  
 
+### Branches
+
+1.  **master** - This is the active development branch with the latest code and integrations.  
+2.  **BUILD** - This is the [Milestone 1](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix/tree/BUILD) branch.  It contains base microservice code, Eureka, Zuul, and Config Server components.
+3.  **DEVOPS** - This is the (planned) Milestone 2 branch.  It is planned to contain DevOps pipelines for easy deployment to Bluemix, as well as Active Deploy integration scenarios.
+4.  **RESILIENCY** - This is the (planned) Milestone 3 branch.  It will contain integration with Netflix Hystrix for circuit breaker implementations, as well as Zipkin/OpenTracing for distributed tracing implementations.
+5.  **MANAGE** - This is the (planned) Milestone 4 branch.  It will contain cloud-based service management capabilities allowing for 24x7 operational excellence of microservice-based applications.
+
 ## Run the reference applications locally and in IBM Cloud
 
 ### Prerequisites: Environment Setup
@@ -46,8 +54,10 @@ Application Components:
 - Acquire the code
   - Clone the base repository:
     **`git clone https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix`**
-  - Clone the peer repositories:
+  - Clone the peer repositories using the `master` branch, which is the active development branch:
     **`./clone_peers.sh`**
+  - Or you can specify a branch when cloning the peer projects to clone and checkout a specific milestone branch.  By default, `master` is selected if no parameter is supplied:
+    **`./clone_peers.sh BUILD`** to clone peer projects and use the **BUILD** branch for all projects
 
 ### Run locally via Docker Compose
 
@@ -84,4 +94,3 @@ Run the following script to deploy all the necessary Java projects as Cloud Foun
 ### Run on Bluemix via IBM Container Service
 
 **TBD End to End Setup**
-
