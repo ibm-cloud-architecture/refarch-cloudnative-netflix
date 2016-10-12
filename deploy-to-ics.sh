@@ -1,11 +1,6 @@
 #!/bin/bash
 
-####
-####TODO:
-####
-
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
 
 #################################################################################
 # Configuration Data
@@ -71,7 +66,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   echo -e "\nCreating ${IMAGE_NAME} container group"
   # Push application code
-  if [[ ${PROJECT} == *"eureka"* ]]; then
+  if [[ ${IMAGE_NAME} == *"netflix-eureka"* ]]; then
     # Push Eureka application code
     cf ic group create \
       --name ${IMAGE_NAME}-group \
@@ -79,18 +74,25 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --min 1 --max 2 --desired 1 \
       --hostname ${SERVICE_ROUTE} \
       --domain ${DOMAIN} \
-      --env "SPRING_PROFILES_ACTIVE=container-cloud" \
       ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
     RUN_RESULT=$?
 
     EUREKA_ENDPOINT="http://${SERVICE_ROUTE}.${DOMAIN}/eureka/"
 
-    # Create a user-provided-service instance of Eureka for easier binding
-    #CHECK_SERVICE=$(cf service ${SERVICE_DISCOVERY_UPS})
-    #if [[ "$?" == "0" ]]; then
-    #  cf delete-service -f ${SERVICE_DISCOVERY_UPS}
-    #fi
-    #cf create-user-provided-service ${SERVICE_DISCOVERY_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/eureka/\"}"
+  elif [[ ${IMAGE_NAME} == *"spring-config"* ]]; then
+    # Push Config Server application code, leveraging metadata from manifest.yml
+    cf ic group create \
+      --name ${IMAGE_NAME}-group \
+      --publish 8080 --memory 128 --auto \
+      --min 1 --max 2 --desired 1 \
+      --hostname ${SERVICE_ROUTE} \
+      --domain ${DOMAIN} \
+      --env "server_port=8080" \
+      --env "eureka_client_serviceUrl_defaultZone=${EUREKA_ENDPOINT}" \
+      ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
+    RUN_RESULT=$?
+
+    CONFIG_ENDPOINT="http://${SERVICE_ROUTE}.${DOMAIN}"
 
   else
     # Push microservice component code, leveraging metadata from manifest.yml
@@ -102,18 +104,16 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --domain ${DOMAIN} \
       --env "server_port=8080" \
       --env "eureka_client_serviceUrl_defaultZone=${EUREKA_ENDPOINT}" \
+      --env "spring_cloud_config_uri=${CONFIG_ENDPOINT}" \
       ${BLUEMIX_REGISTRY_HOST}/${NAMESPACE}/${IMAGE_NAME}
-
     RUN_RESULT=$?
   fi
 
   if [ ${RUN_RESULT} -ne 0 ]; then
     echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
-    #exit 1
+    exit 1
   fi
   cd $SCRIPTDIR
 done
 
-#TODO Do some more inspection here to output messages for where users can find:
-# - Their Eureka Dashboard
-# - Their Menu UI endpoint, via Zuul-Proxy
+cf ic group ls
