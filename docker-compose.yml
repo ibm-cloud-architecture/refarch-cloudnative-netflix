@@ -6,6 +6,16 @@ services:
    ports:
     - "8761:8761"
 
+  config:
+   #build: ../refarch-cloudnative-spring-config/docker
+   image: spring-config
+   links:
+    - eureka
+   ports:
+    - "8888:8888"
+   env_file:
+    - wfd.env
+
   zuul:
    #build: ../refarch-cloudnative-netflix-zuul/docker
    image: netflix-zuul

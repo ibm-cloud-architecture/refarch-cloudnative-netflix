@@ -3,6 +3,9 @@ services:
   eureka:
    build: ../refarch-cloudnative-netflix-eureka/docker
 
+  config:
+   build: ../refarch-cloudnative-spring-config/docker
+
   zuul:
    build: ../refarch-cloudnative-netflix-zuul/docker
 

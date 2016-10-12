@@ -15,6 +15,8 @@ SERVICE_SUFFIX=${RANDOM}
 
 #The name of the user-provided-service we will create to connect to Service Discovery servers
 SERVICE_DISCOVERY_UPS="eureka-service-discovery"
+#The name of the user-provided-service we will create to connect to Config servers
+CONFIG_SERVER_UPS="config-server"
 
 # The domain associated with your Bluemix region
 DOMAIN="mybluemix.net"
@@ -27,6 +29,7 @@ GITHUB_ORG="ibm-cloud-architecture"
 #All required repositories
 REQUIRED_REPOS=(
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-spring-config.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-entree.git
@@ -73,6 +76,26 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     fi
     cf create-user-provided-service ${SERVICE_DISCOVERY_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/eureka/\"}"
 
+  elif [[ ${COMPONENT} == *"spring-config"* ]]; then
+    # Push Config Server application code, leveraging metadata from manifest.yml
+    cf push \
+      -p ${RUNNABLE_JAR} \
+      -d ${DOMAIN} \
+      -n ${SERVICE_ROUTE} \
+      --no-start
+    RUN_RESULT=$?
+
+    cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
+    cf restage ${COMPONENT}
+    cf start ${COMPONENT}
+
+    # Create a user-provided-service instance of Config Server for easier binding
+    CHECK_SERVICE=$(cf service ${CONFIG_SERVER_UPS})
+    if [[ "$?" == "0" ]]; then
+      cf delete-service -f ${CONFIG_SERVER_UPS}
+    fi
+    cf create-user-provided-service ${CONFIG_SERVER_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/\"}"
+
   else
     # Push microservice component code, leveraging metadata from manifest.yml
     cf push \
@@ -84,13 +107,14 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
 
     cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
+    cf bind-service ${COMPONENT} ${CONFIG_SERVER_UPS}
     cf start ${COMPONENT}
     RUN_RESULT=$?
   fi
 
   if [ ${RUN_RESULT} -ne 0 ]; then
     echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
-    exit 1
+#    exit 1
   fi
   cd $SCRIPTDIR
 done
