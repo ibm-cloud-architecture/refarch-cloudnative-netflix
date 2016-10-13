@@ -31,6 +31,7 @@ services:
    image: wfd-ui
    links:
     - eureka
+    - config
    ports:
     - "8181:8181"
    env_file:
@@ -41,6 +42,7 @@ services:
    image: wfd-menu
    links:
     - eureka
+    - config
    ports:
     - "8180:8180"
    env_file:
@@ -53,6 +55,7 @@ services:
     - "8082:8082"
    links:
     - eureka
+    - config
    env_file:
     - wfd.env
 
@@ -61,6 +64,7 @@ services:
    image: wfd-entree
    links:
     - eureka
+    - config
    ports:
     - "8081:8081"
    env_file:
@@ -71,6 +75,7 @@ services:
    image: wfd-dessert
    links:
     - eureka
+    - config
    ports:
     - "8083:8083"
    env_file:
