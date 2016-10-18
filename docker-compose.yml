@@ -12,7 +12,7 @@ services:
    links:
     - eureka
    ports:
-    - "8888:8888"
+    - "8888"
    env_file:
     - wfd.env
 
@@ -45,8 +45,8 @@ services:
     - eureka
     - config
    ports:
-    - "8181:8181"
-    - "9181:9181"
+    - "8181"
+    - "9181"
    env_file:
     - wfd.env
 
@@ -57,8 +57,8 @@ services:
     - eureka
     - config
    ports:
-    - "8180:8180"
-    - "9180:9180"
+    - "8180"
+    - "9180"
    env_file:
     - wfd.env
 
@@ -66,7 +66,7 @@ services:
    #build: ../refarch-cloudnative-wfd-appetizer/docker
    image: wfd-appetizer
    ports:
-    - "8082:8082"
+    - "8082"
    links:
     - eureka
     - config
@@ -80,7 +80,7 @@ services:
     - eureka
     - config
    ports:
-    - "8081:8081"
+    - "8081"
    env_file:
     - wfd.env
 
@@ -91,6 +91,6 @@ services:
     - eureka
     - config
    ports:
-    - "8083:8083"
+    - "8083"
    env_file:
     - wfd.env
