@@ -26,6 +26,18 @@ services:
    env_file:
     - wfd.env
 
+  turbine:
+   #build: ../refarch-cloudnative-netflix-turbine/docker
+   image: netflix-turbine
+   links:
+    - eureka
+    - config
+   ports:
+    - "8989:8989"
+    - "8990:8990"
+   env_file:
+    - wfd.env
+
   ui:
    #build: ../refarch-cloudnative-wfd-ui/docker
    image: wfd-ui
@@ -34,6 +46,7 @@ services:
     - config
    ports:
     - "8181:8181"
+    - "9181:9181"
    env_file:
     - wfd.env
 
@@ -45,6 +58,7 @@ services:
     - config
    ports:
     - "8180:8180"
+    - "9180:9180"
    env_file:
     - wfd.env
 
