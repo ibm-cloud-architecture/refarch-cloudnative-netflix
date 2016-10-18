@@ -17,6 +17,8 @@ SERVICE_SUFFIX=${RANDOM}
 SERVICE_DISCOVERY_UPS="eureka-service-discovery"
 #The name of the user-provided-service we will create to connect to Config servers
 CONFIG_SERVER_UPS="config-server"
+#The name of the user-provided-service we will create to connect to zipkin
+ZIPKIN_SERVER_UPS="zipkin-server"
 
 # The domain associated with your Bluemix region
 DOMAIN="mybluemix.net"
@@ -29,6 +31,7 @@ GITHUB_ORG="ibm-cloud-architecture"
 #All required repositories
 REQUIRED_REPOS=(
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-zipkin.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-spring-config.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
@@ -86,6 +89,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     RUN_RESULT=$?
 
     cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
+    cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
     cf restage ${COMPONENT}
     cf start ${COMPONENT}
 
@@ -95,6 +99,28 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       cf delete-service -f ${CONFIG_SERVER_UPS}
     fi
     cf create-user-provided-service ${CONFIG_SERVER_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/\"}"
+
+  elif [[ ${COMPONENT} == *"zipkin"* ]]; then
+    # zipkin jar is downloaded, not built by us:
+    RUNNABLE_JAR="$(find . -name "zipkin.jar" | sed -n 1p)"
+    # Push zipkin server, leveraging metadata from manifest.yml
+    cf push \
+      -p ${RUNNABLE_JAR} \
+      -d ${DOMAIN} \
+      -n ${SERVICE_ROUTE} \
+      --no-start
+    RUN_RESULT=$?
+
+    cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
+    cf restage ${COMPONENT}
+    cf start ${COMPONENT}
+
+    # Create a user-provided-service instance of zipkin for easier binding
+    CHECK_SERVICE=$(cf service ${ZIPKIN_SERVER_UPS})
+    if [[ "$?" == "0" ]]; then
+      cf delete-service -f ${ZIPKIN_SERVER_UPS}
+    fi
+    cf create-user-provided-service ${ZIPKIN_SERVER_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/\"}"
 
   else
     # Push microservice component code, leveraging metadata from manifest.yml
@@ -108,6 +134,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
     cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
     cf bind-service ${COMPONENT} ${CONFIG_SERVER_UPS}
+    cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
     cf start ${COMPONENT}
     RUN_RESULT=$?
   fi

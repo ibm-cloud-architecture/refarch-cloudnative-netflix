@@ -19,6 +19,7 @@ GITHUB_ORG="ibm-cloud-architecture"
 #All required repositories
 REQUIRED_REPOS=(
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
+    https://github.com/${GITHUB_ORG}/refarch-cloudnative-zipkin.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-spring-config.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
     https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
