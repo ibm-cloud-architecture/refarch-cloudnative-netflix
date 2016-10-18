@@ -1,9 +1,5 @@
 #!/bin/bash
 
-####
-####TODO:
-####
-
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 #################################################################################
@@ -141,12 +137,9 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   if [ ${RUN_RESULT} -ne 0 ]; then
     echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
-#    exit 1
+    exit 1
   fi
   cd $SCRIPTDIR
 done
 
 cf apps
-#TODO Do some more inspection here to output messages for where users can find:
-# - Their Eureka Dashboard
-# - Their Menu UI endpoint, via Zuul-Proxy
