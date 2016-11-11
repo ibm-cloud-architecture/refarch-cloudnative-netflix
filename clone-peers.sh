@@ -14,8 +14,10 @@ fi
 #Optional overrides to allow for specific default branches to be used.
 DEFAULT_BRANCH=${1:-master}
 
-#IBM Cloud Architecture GitHub Repository.  This should be changed for forked repositories.
-GITHUB_ORG="ibm-cloud-architecture"
+#IBM Cloud Architecture GitHub Repository.
+GITHUB_ORG=${CUSTOM_GITHUB_ORG:-ibm-cloud-architecture}
+echo "Cloning from GitHub Organization or User Account of \"${GITHUB_ORG}\"."
+echo "To override this value, run \"export CUSTOM_GITHUB_ORG=your-github-org\" prior to running this script."
 
 #All required repositories
 REQUIRED_REPOS=(
