@@ -1,0 +1,21 @@
+#################################################################################
+## Required repositories
+## Utility scripts will process these repos in order.
+#################################################################################
+
+REQUIRED_REPOS=(
+    refarch-cloudnative-netflix-eureka
+    refarch-cloudnative-spring-config
+    refarch-cloudnative-netflix-zuul
+    refarch-cloudnative-wfd-appetizer
+    refarch-cloudnative-wfd-entree
+    refarch-cloudnative-wfd-dessert
+    refarch-cloudnative-wfd-menu
+    refarch-cloudnative-wfd-ui
+)
+
+OPTIONAL_REPOS=(
+    refarch-cloudnative-zipkin
+    refarch-cloudnative-netflix-hystrix
+    refarch-cloudnative-netflix-turbine
+)
