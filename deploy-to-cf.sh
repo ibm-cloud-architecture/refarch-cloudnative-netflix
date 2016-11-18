@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/.reporc
 
 #################################################################################
 # Configuration Data
@@ -19,21 +20,6 @@ DOMAIN="mybluemix.net"
 #DOMAIN="eu-gb.mybluemix.net"
 #DOMAIN="au-syd.mybluemix.net"
 
-#IBM Cloud Architecture GitHub Repository.  This should be changed for forked repositories.
-GITHUB_ORG="ibm-cloud-architecture"
-
-#All required repositories
-REQUIRED_REPOS=(
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-spring-config.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-entree.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-dessert.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-menu.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-ui.git
-)
-
 #################################################################################
 # Deployment Code
 #################################################################################
@@ -41,16 +27,16 @@ REQUIRED_REPOS=(
 #Build all required repositories as a peer of the current directory (root microservices-refapp-netflix repository)
 for REPO in ${REQUIRED_REPOS[@]}; do
 
-  PROJECT=$(echo ${REPO} | cut -d/ -f5 | cut -d. -f1)
-  echo -e "\nStarting ${PROJECT} project"
+  #PROJECT=$(echo ${REPO} | cut -d/ -f5 | cut -d. -f1)
+  echo -e "\nStarting ${REPO} project"
 
-  cd ../${PROJECT}
+  cd ../${REPO}
 
   # Determein which JAR file we should use (since we have both Gradle and Maven possibilities)
   RUNNABLE_JAR="$(find . -name "*-SNAPSHOT.jar" | sed -n 1p)"
 
   # Create the route ahead of time to control access
-  COMPONENT=${PROJECT#refarch-cloudnative-}
+  COMPONENT=${REPO#refarch-cloudnative-}
   CURRENT_SPACE=$(cf target | grep "Space:" | awk '{print $2}')
   SERVICE_ROUTE="${COMPONENT}-${SERVICE_SUFFIX}"
 
@@ -109,7 +95,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   fi
 
   if [ ${RUN_RESULT} -ne 0 ]; then
-    echo ${PROJECT}" failed to start successfully.  Check logs in the local project directory for more details."
+    echo ${REPO}" failed to start successfully.  Check logs in the local project directory for more details."
     exit 1
   fi
   cd $SCRIPTDIR
