@@ -5,7 +5,10 @@
 
 REQUIRED_REPOS=(
     refarch-cloudnative-netflix-eureka
+    refarch-cloudnative-zipkin
     refarch-cloudnative-spring-config
+    refarch-cloudnative-netflix-hystrix
+    refarch-cloudnative-netflix-turbine
     refarch-cloudnative-netflix-zuul
     refarch-cloudnative-wfd-appetizer
     refarch-cloudnative-wfd-entree
@@ -15,7 +18,5 @@ REQUIRED_REPOS=(
 )
 
 OPTIONAL_REPOS=(
-    refarch-cloudnative-zipkin
-    refarch-cloudnative-netflix-hystrix
-    refarch-cloudnative-netflix-turbine
+
 )
