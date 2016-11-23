@@ -1,10 +1,11 @@
 #!/bin/bash
-
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
 #################################################################################
 # Clone peer repositories
 #################################################################################
+
+SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/.reporc
+
 GIT_AVAIL=$(which git)
 if [ ${?} -ne 0 ]; then
   echo "git is not available on your local system.  Please install git for your operating system and try again."
@@ -14,24 +15,17 @@ fi
 #Optional overrides to allow for specific default branches to be used.
 DEFAULT_BRANCH=${1:-master}
 
-#IBM Cloud Architecture GitHub Repository.  This should be changed for forked repositories.
-GITHUB_ORG="ibm-cloud-architecture"
-
-#All required repositories
-REQUIRED_REPOS=(
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-eureka.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-spring-config.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-netflix-zuul.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-appetizer.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-entree.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-dessert.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-menu.git
-    https://github.com/${GITHUB_ORG}/refarch-cloudnative-wfd-ui.git
-)
+#IBM Cloud Architecture GitHub Repository.
+GITHUB_ORG=${CUSTOM_GITHUB_ORG:-ibm-cloud-architecture}
+echo "Cloning from GitHub Organization or User Account of \"${GITHUB_ORG}\"."
+echo "--> To override this value, run \"export CUSTOM_GITHUB_ORG=your-github-org\" prior to running this script."
+echo "Cloning from repository branch \"${DEFAULT_BRANCH}\"."
+echo "--> To override this value, pass in the desired branch as a parameter to this script. E.g \"./clone-peers.sh BUILD\""
+read -p "Press ENTER to continue"
 
 #Clone all required repositories as a peer of the current directory (root microservices-refapp-netflix repository)
 for REPO in ${REQUIRED_REPOS[@]}; do
-  PROJECT=$(echo ${REPO} | cut -d/ -f5 | cut -d. -f1)
-  echo -e "\nCloning ${PROJECT} project"
-  git clone -b ${DEFAULT_BRANCH} ${REPO} ../${PROJECT}
+  GIT_REPO="https://github.com/${GITHUB_ORG}/${REPO}.git"
+  echo -e "\nCloning ${REPO} project"
+  git clone -b ${DEFAULT_BRANCH} ${GIT_REPO} ../${REPO}
 done
