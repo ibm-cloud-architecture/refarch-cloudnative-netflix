@@ -93,4 +93,6 @@ Run the following script to deploy all the necessary Java projects as Cloud Foun
 
 ### Run on Bluemix via IBM Container Service
 
-**TBD End to End Setup**
+Run the following script to deploy all microservices in countainer groups.
+
+  **`./deploy-to-ics.sh`**
