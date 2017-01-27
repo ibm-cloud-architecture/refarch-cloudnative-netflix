@@ -131,7 +131,8 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     cf create-user-provided-service ${ZIPKIN_SERVER_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/\"}"
   elif [[ ${COMPONENT} == "netflix-hystrix" ]]; then
     # Do nothing since the cf version of the hystrix dashboard has its own repo
-    continue
+    # just delete the route
+    cf delete-route -f ${DOMAIN} --hostname ${SERVICE_ROUTE}
   elif [[ ${COMPONENT} == "netflix-hystrix-cf" ]]; then
     # Hystrix Dashboard is a WAR application which uses Web Sockets.
     RUNNABLE_WAR="$(find . -name "hystrix-dashboard-0.0.1.war" | sed -n 1p)"
