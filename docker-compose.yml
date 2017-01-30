@@ -26,6 +26,16 @@ services:
    env_file:
     - wfd.env
 
+  hystrix:
+   #build: ../refarch-cloudnative-netflix-hystrix/docker
+   image: netflix-hystrix
+   links:
+    - eureka
+   ports:
+    - "8383:8383"
+   env_file:
+    - wfd.env
+
   turbine:
    #build: ../refarch-cloudnative-netflix-turbine/docker
    image: netflix-turbine

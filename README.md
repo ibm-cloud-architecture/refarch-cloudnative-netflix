@@ -34,14 +34,22 @@ Application Components:
 2. [Menu Backend](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-menu)  - Exposes all the meal components as a single REST API endpoint, aggregating Appetizers, Entrees, and Desserts.  
 3. [Appetizer Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-appetizer)  - Microservice providing a REST API for Appetizer options
 4. [Entree Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-entree)  - Microservice providing a REST API for Entree options  
-5. [Dessert Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-dessert)  - Microservice providing a REST API for Dessert options  
+5. [Dessert Service](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-dessert)  - Microservice providing a REST API for Dessert options
+
+Resiliency Components:
+
+1. [Hystrix](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-hystrix) - Contains the Hystrix Dashboard container version application component for microservices foundation
+2. [Hystrix CF](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-hystrix-cf) - Contains the Hystrix Dashboard Cloud Foundry version application component for microservices foundation
+3. [Turbine](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-turbine) - Contains the Turbine application component for microservices foundation
+
+
 
 ### Branches
 
 1.  **master** - This is the active development branch with the latest code and integrations.  
 2.  **BUILD** - This is the [Milestone 1](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix/tree/BUILD) branch.  It contains base microservice code, Eureka, Zuul, and Config Server components.
-3.  **DEVOPS** - This is the (planned) Milestone 2 branch.  It is planned to contain DevOps pipelines for easy deployment to Bluemix, as well as Active Deploy integration scenarios.
-4.  **RESILIENCY** - This is the (planned) Milestone 3 branch.  It will contain integration with Netflix Hystrix for circuit breaker implementations, as well as Zipkin/OpenTracing for distributed tracing implementations.
+3.  **DEVOPS** - This is the [Milestone 2](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix/tree/DEVOPS) branch.  It contains DevOps pipelines for easy deployment to Bluemix, as well as Active Deploy integration scenarios.
+4.  **RESILIENCY** - This is the [Milestone 3](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix/tree/RESILIENCY) branch.  It contains integration with Netflix Hystrix for circuit breaker implementations, as well as Zipkin/OpenTracing for distributed tracing implementations.
 5.  **MANAGE** - This is the (planned) Milestone 4 branch.  It will contain cloud-based service management capabilities allowing for 24x7 operational excellence of microservice-based applications.
 
 ## Run the reference applications locally and in IBM Cloud
@@ -67,9 +75,9 @@ You can run the entire application locally on your laptop via Docker Compose, a 
 
 Run one of the following build script to build all the necessary Java projects.  
 
--   **`./build-all.sh[-d]`** will build all the components required runnable JARs using [Gradle](https://gradle.org/) and optionally package them into Docker containers.
+-   **`./build-all.sh [-d]`** will build all the components required runnable JARs using [Gradle](https://gradle.org/) and optionally package them into Docker containers.
 
--   **`./build-all.sh-m [-d]`** will build all the components required runnable JARs using [Apache Maven](https://maven.apache.org/) and optionally package them into Docker containers.
+-   **`./build-all.sh -m [-d]`** will build all the components required runnable JARs using [Apache Maven](https://maven.apache.org/) and optionally package them into Docker containers.
 
 #### Step 2: Run Docker Compose
 
@@ -92,5 +100,9 @@ Run the following script to deploy all the necessary Java projects as Cloud Foun
   **`./deploy-to-cf.sh`**
 
 ### Run on Bluemix via IBM Container Service
+
+Run the following script to deploy all microservices in countainer groups.
+
+  **`./deploy-to-ics.sh`**
 
 **TBD End to End Setup**

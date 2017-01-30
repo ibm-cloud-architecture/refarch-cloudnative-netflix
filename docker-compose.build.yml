@@ -23,3 +23,9 @@ services:
 
   dessert:
    build: ../refarch-cloudnative-wfd-dessert/docker
+
+  hystrix:
+   build: ../refarch-cloudnative-netflix-hystrix/docker
+
+  turbine:
+   build: ../refarch-cloudnative-netflix-turbine/docker

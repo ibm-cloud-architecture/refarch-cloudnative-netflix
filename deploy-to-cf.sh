@@ -16,11 +16,37 @@ SERVICE_DISCOVERY_UPS="eureka-service-discovery"
 CONFIG_SERVER_UPS="config-server"
 #The name of the user-provided-service we will create to connect to zipkin
 ZIPKIN_SERVER_UPS="zipkin-server"
+#The name of the CloudAMQP Bluemix Service for hystrix integration.
+CLOUDAMQP_SERVICE="cloudamqp-wfd-resiliency"
 
 # The domain associated with your Bluemix region
 DOMAIN="mybluemix.net"
 #DOMAIN="eu-gb.mybluemix.net"
 #DOMAIN="au-syd.mybluemix.net"
+
+#################################################################################
+# Create integration services
+#################################################################################
+
+############################ CloudAMQP Service ##################################
+if [ -n "`cf services | grep ${CLOUDAMQP_SERVICE}`" ]; then
+  # Before creating a new CloudAMQP Service, we need to delete the old one and to do so we have to
+  # unbind any app bound to the old service.
+  MICROSERVICES=`cf services | grep ${CLOUDAMQP_SERVICE} | sed 's/^.*   \(wfd.*$\)/\1/g' | sed 's/, / /g'`
+
+  if [ -n "$MICROSERVICES" ]; then
+    for MICROSERVICE in `echo ${MICROSERVICES}`
+    do
+      cf unbind-service ${MICROSERVICE} ${CLOUDAMQP_SERVICE}
+    done
+  else
+    cf delete-service ${CLOUDAMQP_SERVICE} -f
+  fi
+else
+  # Create new CloudAMQP Service
+  cf create-service cloudamqp lemur ${CLOUDAMQP_SERVICE}
+fi
+#################################################################################
 
 #################################################################################
 # Deployment Code
@@ -34,7 +60,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
 
   cd ../${REPO}
 
-  # Determein which JAR file we should use (since we have both Gradle and Maven possibilities)
+  # Determine which JAR file we should use (since we have both Gradle and Maven possibilities)
   RUNNABLE_JAR="$(find . -name "*-SNAPSHOT.jar" | sed -n 1p)"
 
   # Create the route ahead of time to control access
@@ -69,6 +95,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       --no-start
     RUN_RESULT=$?
 
+    cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
     cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
     cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
     cf restage ${COMPONENT}
@@ -102,6 +129,24 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       cf delete-service -f ${ZIPKIN_SERVER_UPS}
     fi
     cf create-user-provided-service ${ZIPKIN_SERVER_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/\"}"
+  elif [[ ${COMPONENT} == "netflix-hystrix" ]]; then
+    # Do nothing since the cf version of the hystrix dashboard has its own repo
+    # just delete the route
+    cf delete-route -f ${DOMAIN} --hostname ${SERVICE_ROUTE}
+  elif [[ ${COMPONENT} == "netflix-hystrix-cf" ]]; then
+    # Hystrix Dashboard is a WAR application which uses Web Sockets.
+    RUNNABLE_WAR="$(find . -name "hystrix-dashboard-0.0.1.war" | sed -n 1p)"
+    # Push hystrix dashboard, leveraging metadata from manifest.yml
+    cf push \
+      -p ${RUNNABLE_WAR} \
+      -d ${DOMAIN} \
+      -n ${SERVICE_ROUTE} \
+      --no-start
+    RUN_RESULT=$?
+
+    cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
+    cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
+    cf bind-service ${COMPONENT} ${CLOUDAMQP_SERVICE}
 
   else
     # Push microservice component code, leveraging metadata from manifest.yml
@@ -116,6 +161,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
     cf bind-service ${COMPONENT} ${CONFIG_SERVER_UPS}
     cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
+    cf bind-service ${COMPONENT} ${CLOUDAMQP_SERVICE}
     cf start ${COMPONENT}
     RUN_RESULT=$?
   fi
