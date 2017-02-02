@@ -8,7 +8,7 @@ source $SCRIPTDIR/.reporc
 #################################################################################
 
 #This can be updated to use any string which will guarantee global uniqueness across your region (username, favorite cat, etc.)
-SERVICE_SUFFIX=${RANDOM}
+UNIQUE_IDENTIFIER=${1:-RANDOM}
 
 #The name of the user-provided-service we will create to connect to Service Discovery servers
 SERVICE_DISCOVERY_UPS="eureka-service-discovery"
@@ -53,7 +53,7 @@ fi
 #################################################################################
 
 #Build all required repositories as a peer of the current directory (root microservices-refapp-netflix repository)
-for REPO in ${REQUIRED_REPOS[@]}; do
+for REPO in ${CF_REQUIRED_REPOS[@]}; do
 
   #PROJECT=$(echo ${REPO} | cut -d/ -f5 | cut -d. -f1)
   echo -e "\nStarting ${REPO} project"
@@ -66,7 +66,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   # Create the route ahead of time to control access
   COMPONENT=${REPO#refarch-cloudnative-}
   CURRENT_SPACE=$(cf target | grep "Space:" | awk '{print $2}')
-  SERVICE_ROUTE="${COMPONENT}-${SERVICE_SUFFIX}"
+  SERVICE_ROUTE="${COMPONENT}-${UNIQUE_IDENTIFIER}"
 
   cf create-route ${CURRENT_SPACE} ${DOMAIN} --hostname ${SERVICE_ROUTE}
 
@@ -74,6 +74,7 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   if [[ ${COMPONENT} == *"netflix-eureka"* ]]; then
     # Push Eureka application code, leveraging metadata from manifest.yml
     cf push \
+         ${COMPONENT}-${UNIQUE_IDENTIFIER} \
       -p ${RUNNABLE_JAR} \
       -d ${DOMAIN} \
       -n ${SERVICE_ROUTE}
@@ -89,17 +90,18 @@ for REPO in ${REQUIRED_REPOS[@]}; do
   elif [[ ${COMPONENT} == *"spring-config"* ]]; then
     # Push Config Server application code, leveraging metadata from manifest.yml
     cf push \
+         ${COMPONENT}-${UNIQUE_IDENTIFIER} \
       -p ${RUNNABLE_JAR} \
       -d ${DOMAIN} \
       -n ${SERVICE_ROUTE} \
       --no-start
     RUN_RESULT=$?
 
-    cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
-    cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
-    cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
-    cf restage ${COMPONENT}
-    cf start ${COMPONENT}
+    cf set-env ${COMPONENT}-${UNIQUE_IDENTIFIER} SPRING_PROFILES_ACTIVE cloud
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${SERVICE_DISCOVERY_UPS}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${ZIPKIN_SERVER_UPS}
+    cf restage ${COMPONENT}-${UNIQUE_IDENTIFIER}
+    cf start ${COMPONENT}-${UNIQUE_IDENTIFIER}
 
     # Create a user-provided-service instance of Config Server for easier binding
     CHECK_SERVICE=$(cf service ${CONFIG_SERVER_UPS})
@@ -113,15 +115,16 @@ for REPO in ${REQUIRED_REPOS[@]}; do
     RUNNABLE_JAR="$(find . -name "zipkin.jar" | sed -n 1p)"
     # Push zipkin server, leveraging metadata from manifest.yml
     cf push \
+         ${COMPONENT}-${UNIQUE_IDENTIFIER} \
       -p ${RUNNABLE_JAR} \
       -d ${DOMAIN} \
       -n ${SERVICE_ROUTE} \
       --no-start
     RUN_RESULT=$?
 
-    cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
-    cf restage ${COMPONENT}
-    cf start ${COMPONENT}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${SERVICE_DISCOVERY_UPS}
+    cf restage ${COMPONENT}-${UNIQUE_IDENTIFIER}
+    cf start ${COMPONENT}-${UNIQUE_IDENTIFIER}
 
     # Create a user-provided-service instance of zipkin for easier binding
     CHECK_SERVICE=$(cf service ${ZIPKIN_SERVER_UPS})
@@ -129,40 +132,38 @@ for REPO in ${REQUIRED_REPOS[@]}; do
       cf delete-service -f ${ZIPKIN_SERVER_UPS}
     fi
     cf create-user-provided-service ${ZIPKIN_SERVER_UPS} -p "{\"uri\": \"http://${SERVICE_ROUTE}.${DOMAIN}/\"}"
-  elif [[ ${COMPONENT} == "netflix-hystrix" ]]; then
-    # Do nothing since the cf version of the hystrix dashboard has its own repo
-    # just delete the route
-    cf delete-route -f ${DOMAIN} --hostname ${SERVICE_ROUTE}
   elif [[ ${COMPONENT} == "netflix-hystrix-cf" ]]; then
     # Hystrix Dashboard is a WAR application which uses Web Sockets.
     RUNNABLE_WAR="$(find . -name "hystrix-dashboard-0.0.1.war" | sed -n 1p)"
     # Push hystrix dashboard, leveraging metadata from manifest.yml
     cf push \
+         ${COMPONENT}-${UNIQUE_IDENTIFIER} \
       -p ${RUNNABLE_WAR} \
       -d ${DOMAIN} \
       -n ${SERVICE_ROUTE} \
       --no-start
     RUN_RESULT=$?
 
-    cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
-    cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
-    cf bind-service ${COMPONENT} ${CLOUDAMQP_SERVICE}
+    cf set-env ${COMPONENT}-${UNIQUE_IDENTIFIER} SPRING_PROFILES_ACTIVE cloud
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${ZIPKIN_SERVER_UPS}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${CLOUDAMQP_SERVICE}
 
   else
     # Push microservice component code, leveraging metadata from manifest.yml
     cf push \
+         ${COMPONENT}-${UNIQUE_IDENTIFIER} \
       -p ${RUNNABLE_JAR} \
       -d ${DOMAIN} \
       -n ${SERVICE_ROUTE} \
       --no-start
 
-    cf set-env ${COMPONENT} SPRING_PROFILES_ACTIVE cloud
+    cf set-env ${COMPONENT}-${UNIQUE_IDENTIFIER} SPRING_PROFILES_ACTIVE cloud
 
-    cf bind-service ${COMPONENT} ${SERVICE_DISCOVERY_UPS}
-    cf bind-service ${COMPONENT} ${CONFIG_SERVER_UPS}
-    cf bind-service ${COMPONENT} ${ZIPKIN_SERVER_UPS}
-    cf bind-service ${COMPONENT} ${CLOUDAMQP_SERVICE}
-    cf start ${COMPONENT}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${SERVICE_DISCOVERY_UPS}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${CONFIG_SERVER_UPS}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${ZIPKIN_SERVER_UPS}
+    cf bind-service ${COMPONENT}-${UNIQUE_IDENTIFIER} ${CLOUDAMQP_SERVICE}
+    cf start ${COMPONENT}-${UNIQUE_IDENTIFIER}
     RUN_RESULT=$?
   fi
 
