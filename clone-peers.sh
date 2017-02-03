@@ -27,5 +27,10 @@ read -p "Press ENTER to continue"
 for REPO in ${REQUIRED_REPOS[@]}; do
   GIT_REPO="https://github.com/${GITHUB_ORG}/${REPO}.git"
   echo -e "\nCloning ${REPO} project"
-  git clone -b ${DEFAULT_BRANCH} ${GIT_REPO} ../${REPO}
+  #The repo refarch-cloudnative-netflix-hystrix-cf does only have master branch
+  if [[ ${REPO} != "refarch-cloudnative-netflix-hystrix-cf" ]]; then
+    git clone -b ${DEFAULT_BRANCH} ${GIT_REPO} ../${REPO}
+  else
+    git clone -b master ${GIT_REPO} ../${REPO}
+  fi
 done
