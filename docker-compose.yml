@@ -11,6 +11,7 @@ services:
    image: spring-config
    links:
     - eureka
+    - zipkin
    ports:
     - "8888"
    env_file:
@@ -21,6 +22,7 @@ services:
    image: netflix-zuul
    links:
     - eureka
+    - zipkin
    ports:
     - "80:8080"
    env_file:
@@ -42,9 +44,20 @@ services:
    links:
     - eureka
     - config
+    - zipkin
    ports:
     - "8989:8989"
     - "8990:8990"
+   env_file:
+    - wfd.env
+
+  zipkin:
+   #build: ../refarch-cloudnative-zipkin/docker
+   image: zipkin
+   links:
+    - eureka
+   ports:
+    - "9411:9411"
    env_file:
     - wfd.env
 
@@ -54,6 +67,7 @@ services:
    links:
     - eureka
     - config
+    - zipkin
    ports:
     - "8181"
     - "9181"
@@ -66,6 +80,7 @@ services:
    links:
     - eureka
     - config
+    - zipkin
    ports:
     - "8180"
     - "9180"
@@ -80,6 +95,7 @@ services:
    links:
     - eureka
     - config
+    - zipkin
    env_file:
     - wfd.env
 
@@ -89,6 +105,7 @@ services:
    links:
     - eureka
     - config
+    - zipkin
    ports:
     - "8081"
    env_file:
@@ -100,6 +117,7 @@ services:
    links:
     - eureka
     - config
+    - zipkin
    ports:
     - "8083"
    env_file:
