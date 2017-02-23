@@ -4,7 +4,7 @@ Reference applications for deploying microservice-based applications onto IBM Bl
 
 ## Architecture
 
-  ![Application Architecture](static/imgs/wfd-arch-v1.png?raw=true)
+  ![Application Architecture](static/imgs/WhatsForDinner-Netflix-OSS.png?raw=true)
 
 ## Application Overview
 
