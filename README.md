@@ -2,6 +2,8 @@
 
 Reference applications for deploying microservice-based applications onto IBM Bluemix, leveraging the Netflix OSS framework.
 
+_This application has been developed and designed to run in the **IBM Bluemix us-south public region**. Changes may be required if it is to run on a different IBM Bluemix public region or on a local/dedicated environment._
+
 ## Architecture
 
   ![Application Architecture](static/imgs/wfd-arch-v1.png?raw=true)
