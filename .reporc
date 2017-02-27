@@ -3,19 +3,47 @@
 ## Utility scripts will process these repos in order.
 #################################################################################
 
-REQUIRED_REPOS=(
+CF_REQUIRED_REPOS=(
     refarch-cloudnative-netflix-eureka
+    refarch-cloudnative-zipkin
     refarch-cloudnative-spring-config
-    refarch-cloudnative-netflix-zuul
     refarch-cloudnative-wfd-appetizer
     refarch-cloudnative-wfd-entree
     refarch-cloudnative-wfd-dessert
     refarch-cloudnative-wfd-menu
     refarch-cloudnative-wfd-ui
+    refarch-cloudnative-netflix-hystrix-cf
+    refarch-cloudnative-netflix-zuul
+)
+
+IC_REQUIRED_REPOS=(
+    refarch-cloudnative-netflix-eureka
+    refarch-cloudnative-spring-config
+    refarch-cloudnative-wfd-appetizer
+    refarch-cloudnative-wfd-entree
+    refarch-cloudnative-wfd-dessert
+    refarch-cloudnative-wfd-menu
+    refarch-cloudnative-wfd-ui
+    refarch-cloudnative-netflix-hystrix
+    refarch-cloudnative-netflix-turbine
+    refarch-cloudnative-netflix-zuul
+)
+
+REQUIRED_REPOS=(
+    refarch-cloudnative-netflix-eureka
+    refarch-cloudnative-zipkin
+    refarch-cloudnative-spring-config
+    refarch-cloudnative-wfd-appetizer
+    refarch-cloudnative-wfd-entree
+    refarch-cloudnative-wfd-dessert
+    refarch-cloudnative-wfd-menu
+    refarch-cloudnative-wfd-ui
+    refarch-cloudnative-netflix-hystrix-cf
+    refarch-cloudnative-netflix-hystrix
+    refarch-cloudnative-netflix-turbine
+    refarch-cloudnative-netflix-zuul
 )
 
 OPTIONAL_REPOS=(
-    refarch-cloudnative-zipkin
-    refarch-cloudnative-netflix-hystrix
-    refarch-cloudnative-netflix-turbine
+
 )

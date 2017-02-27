@@ -9,6 +9,12 @@ services:
   zuul:
    build: ../refarch-cloudnative-netflix-zuul/docker
 
+  turbine:
+   build: ../refarch-cloudnative-netflix-turbine/docker
+
+  zipkin:
+   build: ../refarch-cloudnative-zipkin/docker
+
   ui:
    build: ../refarch-cloudnative-wfd-ui/docker
 
@@ -23,3 +29,9 @@ services:
 
   dessert:
    build: ../refarch-cloudnative-wfd-dessert/docker
+
+  hystrix:
+   build: ../refarch-cloudnative-netflix-hystrix/docker
+
+  turbine:
+   build: ../refarch-cloudnative-netflix-turbine/docker
