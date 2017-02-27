@@ -95,6 +95,7 @@ Run the following script to deploy all the necessary Java projects as Cloud Foun
 
 ### Run on Bluemix via IBM Container Service
 
-Run the following script to deploy all microservices in countainer groups.
+Run the following script to deploy all the necessary Java projects as Container Groups.
 
   **`./deploy-to-ics.sh`**
+
