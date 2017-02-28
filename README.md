@@ -44,6 +44,10 @@ Resiliency Components:
 2. [Hystrix CF](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-hystrix-cf) - Contains the Hystrix Dashboard Cloud Foundry version application component for microservices foundation
 3. [Turbine](https://github.com/ibm-cloud-architecture/refarch-cloudnative-netflix-turbine) - Contains the Turbine application component for microservices foundation
 
+DevOps Components:
+
+1. [CF Toolchain](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-devops-cf) - A one click full deployment process which will create a toolchain for the Cloud Foundry version of this architecture
+2. [IC Toolchain](https://github.com/ibm-cloud-architecture/refarch-cloudnative-wfd-devops-containers) - A one click full deployment process which will create a toolchain for the IBM Bluemix Containers version of this architecture
 
 
 ### Branches
