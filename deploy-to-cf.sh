@@ -8,7 +8,7 @@ source $SCRIPTDIR/.reporc
 #################################################################################
 
 #This can be updated to use any string which will guarantee global uniqueness across your region (username, favorite cat, etc.)
-UNIQUE_IDENTIFIER=${1:-RANDOM}
+UNIQUE_IDENTIFIER=${1:-${RANDOM}}
 
 #The name of the user-provided-service we will create to connect to Service Discovery servers
 SERVICE_DISCOVERY_UPS="eureka-service-discovery"
